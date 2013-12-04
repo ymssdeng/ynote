@@ -1,0 +1,10 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.5.Final'
+}
