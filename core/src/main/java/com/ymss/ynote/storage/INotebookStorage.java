@@ -1,8 +1,8 @@
 package com.ymss.ynote.storage;
 
-import com.ymss.ynote.note.INotebook;
+import com.ymss.ynote.note.Notebook;
 
 public interface INotebookStorage {
 
-	void save(INotebook notebook);
+	void save(Notebook notebook);
 }

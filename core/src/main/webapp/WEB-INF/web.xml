@@ -4,16 +4,16 @@
 <web-app>
     <display-name>Archetype RestEasy Web Application</display-name>
     <servlet>
-        <servlet-name>Resteasy</servlet-name>
+        <servlet-name>ynote</servlet-name>
         <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.jboss.example.jaxrs2.async.CustomerApplication</param-value>
+            <param-value>com.ymss.ynote.endpoints.YNoteApplication</param-value>
         </init-param>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Resteasy</servlet-name>
+        <servlet-name>ynote</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
