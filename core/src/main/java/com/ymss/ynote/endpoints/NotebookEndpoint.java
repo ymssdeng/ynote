@@ -1,5 +1,6 @@
 package com.ymss.ynote.endpoints;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -29,6 +30,7 @@ public class NotebookEndpoint {
 			) throws Exception
 	{
 		Notebook nbook = Notebook.newInstance(name);
+		notebookStorage.save(nbook);
 		return Response.ok().build();
 	}
 }
