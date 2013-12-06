@@ -7,14 +7,15 @@ repositories {
 }
 
 dependencies {
-	compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.5.Final'
-	compile 'org.jboss.resteasy:resteasy-spring:3.0.5.Final'
+	
 	compile 'javax.servlet:javax.servlet-api:3.1.0'
+	
+	// the version should be the same with the version used in jbossas/modules, this is for 7.1.1
+	compile 'org.jboss.resteasy:resteasy-jaxrs:2.3.2.Final'
+	compile 'org.jboss.resteasy:resteasy-spring:2.3.2.Final'
+	
+	compile 'javax.inject:javax.inject:1'
 	compile 'org.springframework:spring-core:3.1.4.RELEASE'
 	compile 'org.springframework:spring-context:3.1.4.RELEASE'
 	compile 'org.springframework:spring-web:3.1.4.RELEASE'
-            
-    compile 'javax.inject:javax.inject:1'
-            
-            
 }
