@@ -9,9 +9,15 @@
 		<param-value>WEB-INF/application-context.xml</param-value>
 	</context-param>
 
+	<!-- RESTEasy configuration -->
+	<listener>
+		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+	</listener>
+	
 	<listener>
 		<listener-class>
-			org.springframework.web.context.ContextLoaderListener
+			<!-- special context loader listener in resteasy -->
+			org.jboss.resteasy.plugins.spring.SpringContextLoaderListener
 		</listener-class>
 	</listener>
 	
