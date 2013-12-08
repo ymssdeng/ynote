@@ -1,7 +1,5 @@
 package com.ymss.ynote.storage;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -15,8 +13,8 @@ public class NotebookStorage implements INotebookStorage {
 
 	@Override
 	public void save(Notebook notebook) throws Exception {
-		sp.save("notebook/" + notebook.getCategory().toString(),
-				notebook.toJSON());
+		sp.save("notebook/" + notebook.getCategory().toString() + "/"
+				+ notebook.getId(), notebook.toJSON());
 	}
 
 }
