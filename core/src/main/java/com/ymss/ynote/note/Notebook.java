@@ -2,7 +2,11 @@ package com.ymss.ynote.note;
 
 import java.util.UUID;
 
-public class Notebook{
+import org.json.JSONObject;
+
+import com.ymss.ynote.storage.IStorageable;
+
+public class Notebook implements IStorageable {
 
 	private static final String DEFAULT_NAME = "New Notebook";
 	private String name = DEFAULT_NAME;
@@ -31,7 +35,7 @@ public class Notebook{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public NotebookCategory getCategory() {
 		return category;
 	}
@@ -46,5 +50,13 @@ public class Notebook{
 
 	public static Notebook newInstance(String name) {
 		return new Notebook(name);
+	}
+
+	@Override
+	public String toJSON() {
+		JSONObject json = new JSONObject();
+		json.append("id", id).append("name", name)
+				.append("category", category.toString());
+		return json.toString();
 	}
 }
