@@ -21,5 +21,11 @@ dependencies {
 	
 	compile 'org.apache.hadoop:hadoop-common:2.2.0'
     compile 'org.json:json:20131018'
-            
+    
+    // lucene
+    compile 'org.apache.lucene:lucene-core:4.2.0'
+    compile 'org.apache.lucene:lucene-queries:4.2.0'
+    compile 'org.apache.lucene:lucene-analyzers-common:4.2.0'
+    compile 'org.apache.lucene:lucene-queryparser:4.2.0'
+    compile 'org.slf4j:slf4j-api:1.7.3'
 }

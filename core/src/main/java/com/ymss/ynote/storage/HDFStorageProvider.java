@@ -46,12 +46,11 @@ public class HDFStorageProvider implements IStorageProvider {
 	@Override
 	public String get(String path) throws IOException {
 		Path hPath = new Path(path);
-		long bytes = hdfs.listStatus(hPath)[0].getLen();
+
 		try (FSDataInputStream in = hdfs.open(hPath)) {
 			StringBuilder sb = new StringBuilder();
 			byte[] buffer = new byte[1024];
-			int r;
-			while ((r = in.read(buffer)) > 0) {
+			while (in.read(buffer) > 0) {
 				sb.append(new String(buffer));
 			}
 			return sb.toString();
