@@ -19,7 +19,8 @@ import org.apache.lucene.util.Version;
 
 import com.ymss.ynote.note.Notebook;
 import com.ymss.ynote.search.Initable;
-import com.ymss.ynote.storage.INotebookStorage;
+import com.ymss.ynote.storage.Paging;
+import com.ymss.ynote.storage.Storage;
 
 @Named
 public class IndexOperator implements Initable {
@@ -27,7 +28,7 @@ public class IndexOperator implements Initable {
 	private IndexWriter iw;
 	private List<Document> docs = new ArrayList<>();
 	@Inject
-	private INotebookStorage notebook;
+	private Storage<Notebook> nbStorage;
 
 	@Override
 	public void init() {
@@ -40,13 +41,17 @@ public class IndexOperator implements Initable {
 			iw = new IndexWriter(dir, config);
 
 			// create document
-			for (Notebook book : notebook.get()) {
-				Document doc = new Document();
-				doc.add(new StringField("id", book.getId(), Store.YES));
-				doc.add(new TextField("name", book.getName(), Store.YES));
-				doc.add(new StringField("category", book.getCategory()
-						.toString(), Store.YES));
-				docs.add(doc);
+			Paging paging = new Paging();
+			while (nbStorage.hasNextPage(paging)) {
+				for (Notebook book : nbStorage.getPage(paging)) {
+					Document doc = new Document();
+					doc.add(new StringField("id", book.getId(), Store.YES));
+					doc.add(new TextField("name", book.getName(), Store.YES));
+					doc.add(new StringField("category", book.getCategory()
+							.toString(), Store.YES));
+					docs.add(doc);
+				}
+				paging.setPage(paging.getPage() + 1);
 			}
 
 			// write index

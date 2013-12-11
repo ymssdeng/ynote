@@ -1,6 +1,7 @@
 package com.ymss.ynote.storage.provider;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -13,7 +14,7 @@ import org.apache.hadoop.fs.Path;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named
-public class HDFStorageProvider implements IStorageProvider {
+public class HDFStorageProvider implements StorageProvider {
 
 	private FileSystem hdfs = null;
 	@Value("${hdfs.url}")
@@ -35,16 +36,19 @@ public class HDFStorageProvider implements IStorageProvider {
 	}
 
 	@Override
-	public void save(String path, String data) throws IllegalArgumentException,
-			IOException {
+	public void saveText(String path, String text)
+			throws IllegalArgumentException, IOException {
+		if (path == null)
+			return;
 
 		try (FSDataOutputStream out = hdfs.create(new Path(path))) {
-			out.write(data.getBytes());
+			if (text != null)
+				out.write(text.getBytes());
 		}
 	}
 
 	@Override
-	public String get(String path) throws IOException {
+	public String getText(String path) throws IOException {
 		Path hPath = new Path(path);
 
 		try (FSDataInputStream in = hdfs.open(hPath)) {
@@ -56,4 +60,21 @@ public class HDFStorageProvider implements IStorageProvider {
 			return sb.toString();
 		}
 	}
+
+	@Override
+	public void save(String path, InputStream in) throws IOException {
+		if (path == null || path.isEmpty() || in == null)
+			return;
+
+		try (FSDataOutputStream out = hdfs.create(new Path(path))) {
+			byte[] buffer = new byte[1024];
+			int len = 0;
+			while ((len = in.read(buffer)) > 0) {
+				out.write(buffer, 0, len);
+			}
+		} finally {
+			in.close();
+		}
+	}
+
 }

@@ -1,6 +1,6 @@
 package com.ymss.ynote.storage;
 
-public interface IStorageable {
+public interface Storageable {
 
 	String toJSON();
 }

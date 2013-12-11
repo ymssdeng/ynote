@@ -13,14 +13,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.ymss.ynote.note.Notebook;
-import com.ymss.ynote.storage.INotebookStorage;
+import com.ymss.ynote.storage.Storage;
 
 @Named
 @Path("/note/")
 public class NotebookEndpoints {
 
 	@Inject
-	private INotebookStorage notebookStorage;
+	private Storage notebookStorage;
 	
 	@POST
 	public Response createOne(

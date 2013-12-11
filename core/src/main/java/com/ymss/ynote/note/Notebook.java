@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 
-import com.ymss.ynote.storage.IStorageable;
+import com.ymss.ynote.storage.Storageable;
 
-public class Notebook implements IStorageable {
+public class Notebook implements Storageable {
 
 	private static final String DEFAULT_NAME = "New Notebook";
 	private String name = DEFAULT_NAME;
