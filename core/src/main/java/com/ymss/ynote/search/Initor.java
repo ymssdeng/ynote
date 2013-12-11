@@ -5,23 +5,20 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 @Named
-public class Initor implements ApplicationListener<ApplicationEvent> {
+public class Initor implements ApplicationListener<ContextRefreshedEvent> {
 
 	@Inject
 	private List<Initable> initables;
 
 	@Override
-	public void onApplicationEvent(ApplicationEvent event) {
+	public void onApplicationEvent(ContextRefreshedEvent event) {
 
-		if (event instanceof ContextRefreshedEvent) {
-			for (Initable init : initables) {
-				init.init();
-			}
+		for (Initable init : initables) {
+			init.init();
 		}
 
 	}

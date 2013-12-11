@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.ymss.ynote.note.Notebook;
+import com.ymss.ynote.storage.provider.IStorageProvider;
 
 @Named
 public class NotebookStorage implements INotebookStorage {

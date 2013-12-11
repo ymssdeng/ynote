@@ -1,4 +1,4 @@
-package com.ymss.ynote.storage;
+package com.ymss.ynote.storage.provider;
 
 import java.io.IOException;
 
