@@ -14,6 +14,6 @@
 <configuration>
 	<property>
 		<name>fs.defaultFS</name>
-		<value>hdfs://192.168.137.8:9100</value>
+		<value>hdfs://localhost:9100</value>
 	</property>
 </configuration>

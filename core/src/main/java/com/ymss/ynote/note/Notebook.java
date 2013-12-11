@@ -4,9 +4,10 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 
+import com.google.common.base.Strings;
 import com.ymss.ynote.storage.Storageable;
 
-public class Notebook implements Storageable {
+public class Notebook implements Storageable<Notebook> {
 
 	private static final String DEFAULT_NAME = "New Notebook";
 	private String name = DEFAULT_NAME;
@@ -58,5 +59,17 @@ public class Notebook implements Storageable {
 		json.append("id", id).append("name", name)
 				.append("category", category.toString());
 		return json.toString();
+	}
+
+	@Override
+	public Notebook fromJSON(String text) {
+		if (Strings.isNullOrEmpty(text))
+			return this;
+
+		JSONObject json = new JSONObject(text);
+		id = json.getString("id");
+		name = json.getString("name");
+		category = NotebookCategory.valueOf(json.getString("category"));
+		return this;
 	}
 }

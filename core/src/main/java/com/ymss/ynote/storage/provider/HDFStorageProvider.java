@@ -1,7 +1,14 @@
 package com.ymss.ynote.storage.provider;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -10,8 +17,13 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.google.common.base.Strings;
+import com.ymss.ynote.storage.Paging;
 
 @Named
 public class HDFStorageProvider implements StorageProvider {
@@ -22,9 +34,16 @@ public class HDFStorageProvider implements StorageProvider {
 
 	@PostConstruct
 	public void start() {
-		Configuration conf = new Configuration();
-		conf.set("fs.defaultFS", hdfsUrl);
-		// hdfs = FileSystem.get(conf);
+
+		try {
+			Configuration conf = new Configuration();
+			conf.set("fs.defaultFS", hdfsUrl);
+			hdfs = FileSystem.get(conf);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String getHdfsUrl() {
@@ -38,7 +57,7 @@ public class HDFStorageProvider implements StorageProvider {
 	@Override
 	public void saveText(String path, String text)
 			throws IllegalArgumentException, IOException {
-		if (path == null)
+		if (Strings.isNullOrEmpty(path))
 			return;
 
 		try (FSDataOutputStream out = hdfs.create(new Path(path))) {
@@ -63,7 +82,7 @@ public class HDFStorageProvider implements StorageProvider {
 
 	@Override
 	public void save(String path, InputStream in) throws IOException {
-		if (path == null || path.isEmpty() || in == null)
+		if (Strings.isNullOrEmpty(path) || in == null)
 			return;
 
 		try (FSDataOutputStream out = hdfs.create(new Path(path))) {
@@ -77,4 +96,57 @@ public class HDFStorageProvider implements StorageProvider {
 		}
 	}
 
+	@Override
+	public boolean exists(String path) throws IOException {
+		if (Strings.isNullOrEmpty(path))
+			return false;
+
+		return hdfs.exists(new Path(path));
+	}
+
+	@Override
+	public int getFileCount(String path) throws FileNotFoundException,
+			IOException {
+		RemoteIterator<LocatedFileStatus> iterator = hdfs.listFiles(new Path(
+				path), true);
+		int count = 0;
+		while (iterator.hasNext()) {
+			count++;
+			iterator.next();
+		}
+
+		return count;
+	}
+
+	@Override
+	public List<String> getFileRange(String path, Paging paging)
+			throws FileNotFoundException, IOException {
+		Set<LocatedFileStatus> statusSet = new TreeSet<>(new StatusComparator());
+		RemoteIterator<LocatedFileStatus> iterator = hdfs.listFiles(new Path(
+				path), true);
+		while (iterator.hasNext()) {
+
+			LocatedFileStatus status = iterator.next();
+			statusSet.add(status);
+
+		}
+
+		List<String> ret = new ArrayList<>();
+		Iterator<LocatedFileStatus> iterator2 = statusSet.iterator();
+		while (iterator2.hasNext() && ret.size() < paging.getPageSize()) {
+			ret.add(iterator2.next().getPath().toString());
+		}
+
+		return ret;
+	}
+
+	static class StatusComparator implements Comparator<LocatedFileStatus> {
+
+		@Override
+		public int compare(LocatedFileStatus o1, LocatedFileStatus o2) {
+			if (o1.getModificationTime() == o2.getModificationTime())
+				return 0;
+			return o1.getModificationTime() > o2.getModificationTime() ? 1 : -1;
+		}
+	}
 }

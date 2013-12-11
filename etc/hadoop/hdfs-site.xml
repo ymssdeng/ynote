@@ -15,14 +15,14 @@
 
 	<property>
 		<name>dfs.namenode.name.dir</name>
-		<value>/hadoop/dfs/name</value>
+		<value>/root/hdfs/name</value>
 		<description>
 		</description>
 	</property>
 
 	<property>
 		<name>dfs.datanode.data.dir</name>
-		<value>/hadoop/dfs/data</value>
+		<value>/root/hdfs/data</value>
 		<description>
 		</description>
 	</property>
