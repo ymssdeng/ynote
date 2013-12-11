@@ -133,8 +133,13 @@ public class HDFStorageProvider implements StorageProvider {
 
 		List<String> ret = new ArrayList<>();
 		Iterator<LocatedFileStatus> iterator2 = statusSet.iterator();
+		int index = 1;
 		while (iterator2.hasNext() && ret.size() < paging.getPageSize()) {
-			ret.add(iterator2.next().getPath().toString());
+			LocatedFileStatus s = iterator2.next();
+			if (index > (paging.getPage()-1)*paging.getPageSize()
+				&& index <= paging.getPage()*paging.getPageSize())
+				ret.add(s.getPath().toString());
+			index ++;
 		}
 
 		return ret;
