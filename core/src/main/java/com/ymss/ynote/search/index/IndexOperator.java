@@ -11,6 +11,8 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -22,8 +24,12 @@ import com.ymss.ynote.search.Initable;
 import com.ymss.ynote.storage.Paging;
 import com.ymss.ynote.storage.Storage;
 
-@Named
+@Named("index")
 public class IndexOperator implements Initable {
+
+	// used by query
+	private IndexReader ir;
+	private Directory dir;
 
 	private IndexWriter iw;
 	private List<Document> docs = new ArrayList<>();
@@ -35,7 +41,7 @@ public class IndexOperator implements Initable {
 
 		try {
 			// create dir
-			Directory dir = new RAMDirectory();
+			dir = new RAMDirectory();
 			IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_42,
 					new StandardAnalyzer(Version.LUCENE_42));
 			iw = new IndexWriter(dir, config);
@@ -61,11 +67,24 @@ public class IndexOperator implements Initable {
 
 			// commit index
 			iw.commit();
+
+			// get near real time reader
+			ir = DirectoryReader.open(iw, true);
+
+			// clear
 			docs.clear();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 
+	}
+
+	public IndexReader getIr() {
+		return ir;
+	}
+
+	public Directory getDir() {
+		return dir;
 	}
 
 }
