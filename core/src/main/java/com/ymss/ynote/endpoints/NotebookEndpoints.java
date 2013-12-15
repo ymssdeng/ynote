@@ -13,14 +13,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.ymss.ynote.note.Notebook;
-import com.ymss.ynote.storage.Storage;
+import com.ymss.ynote.storage.NotebookStorage;
 
 @Named
 @Path("/note/")
 public class NotebookEndpoints {
 
 	@Inject
-	private Storage notebookStorage;
+	private NotebookStorage nbs;
 	
 	@POST
 	public Response createOne(
@@ -31,7 +31,7 @@ public class NotebookEndpoints {
 			) throws Exception
 	{
 		Notebook nbook = Notebook.newInstance(name);
-		notebookStorage.save(nbook);
+		nbs.save(nbook);
 		return Response.ok().build();
 	}
 	
@@ -44,7 +44,7 @@ public class NotebookEndpoints {
 			) throws Exception
 	{
 		Notebook nbook = Notebook.newInstance(name);
-		notebookStorage.save(nbook);
+		nbs.save(nbook);
 		return Response.ok().build();
 	}
 }
