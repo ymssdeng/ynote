@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -21,12 +22,14 @@ import org.apache.lucene.util.Version;
 
 import com.ymss.ynote.note.Notebook;
 import com.ymss.ynote.search.Initable;
+import com.ymss.ynote.search.query.QueryOperator;
 import com.ymss.ynote.storage.Paging;
 import com.ymss.ynote.storage.Storage;
 
 @Named("index")
 public class IndexOperator implements Initable {
 
+	private final Logger logger = Logger.getLogger(IndexOperator.class);
 	// used by query
 	private IndexReader ir;
 	private Directory dir;

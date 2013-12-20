@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -27,6 +28,7 @@ import com.ymss.ynote.search.index.IndexOperator;
 @DependsOn("index")
 public class QueryOperator implements Initable {
 
+	private final Logger logger = Logger.getLogger(QueryOperator.class);
 	@Inject
 	private IndexOperator io;
 	private IndexSearcher is;
@@ -46,7 +48,7 @@ public class QueryOperator implements Initable {
 				QueryParser parser = new QueryParser(Version.LUCENE_42, f,
 						new StandardAnalyzer(Version.LUCENE_42));
 				Query query = parser.parse(statement);
-				System.out.println(query.toString());
+				logger.debug(query.toString());
 
 				TopDocs topDocs = is.search(query, 10);
 
