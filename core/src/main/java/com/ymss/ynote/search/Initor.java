@@ -18,7 +18,7 @@ public class Initor implements ApplicationListener<ContextRefreshedEvent> {
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 
 		for (Initable init : initables) {
-			init.init();
+			//init.init();
 		}
 
 	}

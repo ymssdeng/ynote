@@ -28,12 +28,12 @@ alter table notebook add index inx_notebook_name(name);
 alter table notebook add index inx_notebook_cat_name(category_id, name);
 
 # -----------------create user ----------------------
-create user 'u.market'@'%' identified by 'Welcome1';
+create user 'u.ynote'@'%' identified by password '*6261203B1FE4E2741D55025F46349211FF83DCB3';
 -- to avoid plaintext: IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';
--- select password('pwd');
+-- select password('u.ynote');
 
 # -----------------grant access ----------------------
-grant select, update, insert, delete, execute on ynote.* to 'u.market'@'%';  -- 'No role in MySQL'
+grant select, update, insert, delete, execute on ynote.* to 'u.ynote'@'%';  -- 'No role in MySQL'
 
 # -----------------meta data -------------------------
 insert into category (id, name)

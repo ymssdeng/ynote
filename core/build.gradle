@@ -33,3 +33,15 @@ dependencies {
     compile 'org.apache.lucene:lucene-queryparser:4.2.0'
     compile 'org.slf4j:slf4j-api:1.7.3'
 }
+
+task jbossConfig(type: Copy) {
+	from( '../jbossconfig'){ 
+		include '**/*'
+	}
+	into('../jboss-as-7.1.1.Final')
+}
+
+task copyWar(type: Copy, dependsOn: 'war') {
+	from('build/libs/')
+	into('../jboss-as-7.1.1.Final/standalone/deployments')
+}
