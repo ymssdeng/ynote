@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 import org.apache.hadoop.conf.Configuration;
@@ -26,13 +25,14 @@ import com.google.common.base.Strings;
 import com.ymss.ynote.storage.Paging;
 
 @Named
-public class HDFStorageProvider implements StorageProvider {
+@Deprecated
+public class HDFStorageProvider {
 
 	private FileSystem hdfs = null;
 	@Value("${hdfs.url}")
 	private String hdfsUrl;
 
-	@PostConstruct
+	// @PostConstruct
 	public void start() {
 
 		try {
@@ -54,7 +54,7 @@ public class HDFStorageProvider implements StorageProvider {
 		this.hdfsUrl = hdfsUrl;
 	}
 
-	@Override
+	// @Override
 	public void saveText(String path, String text)
 			throws IllegalArgumentException, IOException {
 		if (Strings.isNullOrEmpty(path))
@@ -66,7 +66,7 @@ public class HDFStorageProvider implements StorageProvider {
 		}
 	}
 
-	@Override
+	// @Override
 	public String getText(String path) throws IOException {
 		Path hPath = new Path(path);
 
@@ -80,7 +80,7 @@ public class HDFStorageProvider implements StorageProvider {
 		}
 	}
 
-	@Override
+	// @Override
 	public void save(String path, InputStream in) throws IOException {
 		if (Strings.isNullOrEmpty(path) || in == null)
 			return;
@@ -96,7 +96,7 @@ public class HDFStorageProvider implements StorageProvider {
 		}
 	}
 
-	@Override
+	// @Override
 	public boolean exists(String path) throws IOException {
 		if (Strings.isNullOrEmpty(path))
 			return false;
@@ -104,7 +104,7 @@ public class HDFStorageProvider implements StorageProvider {
 		return hdfs.exists(new Path(path));
 	}
 
-	@Override
+	// @Override
 	public int getFileCount(String path) throws FileNotFoundException,
 			IOException {
 		RemoteIterator<LocatedFileStatus> iterator = hdfs.listFiles(new Path(
@@ -118,7 +118,7 @@ public class HDFStorageProvider implements StorageProvider {
 		return count;
 	}
 
-	@Override
+	// @Override
 	public List<String> getFileRange(String path, Paging paging)
 			throws FileNotFoundException, IOException {
 		Set<LocatedFileStatus> statusSet = new TreeSet<>(new StatusComparator());
@@ -136,10 +136,10 @@ public class HDFStorageProvider implements StorageProvider {
 		int index = 1;
 		while (iterator2.hasNext() && ret.size() < paging.getPageSize()) {
 			LocatedFileStatus s = iterator2.next();
-			if (index > (paging.getPage()-1)*paging.getPageSize()
-				&& index <= paging.getPage()*paging.getPageSize())
+			if (index > (paging.getPage() - 1) * paging.getPageSize()
+					&& index <= paging.getPage() * paging.getPageSize())
 				ret.add(s.getPath().toString());
-			index ++;
+			index++;
 		}
 
 		return ret;

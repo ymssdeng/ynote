@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public interface Storage<T extends Storageable<T>> {
+public interface Storage<T> {
 
 	void save(T t) throws Exception;
 
@@ -14,5 +14,6 @@ public interface Storage<T extends Storageable<T>> {
 
 	List<T> getPage(Paging paging) throws FileNotFoundException, IOException;
 
-	boolean hasNextPage(Paging paging) throws FileNotFoundException, IOException;
+	boolean hasNextPage(Paging paging) throws FileNotFoundException,
+			IOException;
 }

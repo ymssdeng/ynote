@@ -1,18 +1,15 @@
 package com.ymss.ynote.note;
 
-import java.util.UUID;
+import java.sql.Timestamp;
 
-import org.json.JSONObject;
-
-import com.google.common.base.Strings;
-import com.ymss.ynote.storage.Storageable;
-
-public class Notebook implements Storageable<Notebook> {
+public class Notebook {
 
 	private static final String DEFAULT_NAME = "New Notebook";
+
+	private Integer id;
 	private String name = DEFAULT_NAME;
-	private String id = UUID.randomUUID().toString();
-	private NotebookCategory category = NotebookCategory.DEFAULT;
+	private NotebookCategory category;
+	private Timestamp timestamp;
 
 	private Notebook() {
 	}
@@ -21,11 +18,11 @@ public class Notebook implements Storageable<Notebook> {
 		this.name = (name != null && !name.isEmpty()) ? name : DEFAULT_NAME;
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -45,31 +42,19 @@ public class Notebook implements Storageable<Notebook> {
 		this.category = category;
 	}
 
+	public Timestamp getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Timestamp timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public static Notebook newInstance() {
 		return new Notebook();
 	}
 
 	public static Notebook newInstance(String name) {
 		return new Notebook(name);
-	}
-
-	@Override
-	public String toJSON() {
-		JSONObject json = new JSONObject();
-		json.append("id", id).append("name", name)
-				.append("category", category.toString());
-		return json.toString();
-	}
-
-	@Override
-	public Notebook fromJSON(String text) {
-		if (Strings.isNullOrEmpty(text))
-			return this;
-
-		JSONObject json = new JSONObject(text);
-		id = json.getString("id");
-		name = json.getString("name");
-		category = NotebookCategory.valueOf(json.getString("category"));
-		return this;
 	}
 }

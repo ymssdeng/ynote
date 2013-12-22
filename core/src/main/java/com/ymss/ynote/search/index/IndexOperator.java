@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -22,7 +23,6 @@ import org.apache.lucene.util.Version;
 
 import com.ymss.ynote.note.Notebook;
 import com.ymss.ynote.search.Initable;
-import com.ymss.ynote.search.query.QueryOperator;
 import com.ymss.ynote.storage.Paging;
 import com.ymss.ynote.storage.Storage;
 
@@ -54,7 +54,7 @@ public class IndexOperator implements Initable {
 			while (nbStorage.hasNextPage(paging)) {
 				for (Notebook book : nbStorage.getPage(paging)) {
 					Document doc = new Document();
-					doc.add(new StringField("id", book.getId(), Store.YES));
+					doc.add(new IntField("id", book.getId(), Store.YES));
 					doc.add(new TextField("name", book.getName(), Store.YES));
 					doc.add(new StringField("category", book.getCategory()
 							.toString(), Store.YES));

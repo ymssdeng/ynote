@@ -13,10 +13,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.ymss.ynote.note.Notebook;
+import com.ymss.ynote.note.NotebookCategory;
 import com.ymss.ynote.storage.NotebookStorage;
 
 @Named
-@Path("/note/")
+@Path("/notebook/")
 public class NotebookEndpoints {
 
 	@Inject
@@ -44,6 +45,10 @@ public class NotebookEndpoints {
 			) throws Exception
 	{
 		Notebook nbook = Notebook.newInstance(name);
+		NotebookCategory category = new NotebookCategory();
+		category.setId(1);
+		nbook.setCategory(category);
+		
 		nbs.save(nbook);
 		return Response.ok().build();
 	}
