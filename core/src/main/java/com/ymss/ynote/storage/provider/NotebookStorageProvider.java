@@ -1,5 +1,7 @@
 package com.ymss.ynote.storage.provider;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
@@ -26,4 +28,7 @@ public interface NotebookStorageProvider {
 			@Result(column = "created_date", property = "timestamp"),
 			@Result(column = "category_id", property = "category", one = @One(select = "com.ymss.ynote.storage.provider.NotebookCategoryProvider.getById")) })
 	Notebook getById(int id);
+
+	@Select("select * from notebook where id > (#{0}-1)*#{1} order by id asc limit #{1}")
+	List<Notebook> getPage(int page, int pageSize, boolean asc);
 }
