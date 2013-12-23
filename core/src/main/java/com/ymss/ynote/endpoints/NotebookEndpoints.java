@@ -31,7 +31,7 @@ public class NotebookEndpoints {
 			@QueryParam("name") String name
 			) throws Exception
 	{
-		Notebook nbook = Notebook.newInstance(name);
+		Notebook nbook = new Notebook(name);
 		nbs.save(nbook);
 		return Response.ok().build();
 	}
@@ -44,12 +44,14 @@ public class NotebookEndpoints {
 			@QueryParam("name") String name
 			) throws Exception
 	{
-		Notebook nbook = Notebook.newInstance(name);
+		Notebook nbook = new Notebook();
 		NotebookCategory category = new NotebookCategory();
 		category.setId(1);
 		nbook.setCategory(category);
 		
 		nbs.save(nbook);
+		
+		Notebook notebook = nbs.getById(nbook.getId());
 		return Response.ok().build();
 	}
 }

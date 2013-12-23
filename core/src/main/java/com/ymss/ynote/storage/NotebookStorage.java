@@ -23,9 +23,8 @@ public class NotebookStorage implements Storage<Notebook> {
 	}
 
 	@Override
-	public Notebook getById(String id) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public Notebook getById(int id) throws IOException {
+		return nbsp.getById(id);
 	}
 
 	@Override

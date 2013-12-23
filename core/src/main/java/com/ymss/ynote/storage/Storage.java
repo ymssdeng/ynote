@@ -8,7 +8,7 @@ public interface Storage<T> {
 
 	void save(T t) throws Exception;
 
-	T getById(String id) throws IOException;
+	T getById(int id) throws IOException;
 
 	int getPageCount(int pageSize);
 

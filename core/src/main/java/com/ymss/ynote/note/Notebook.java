@@ -11,10 +11,11 @@ public class Notebook {
 	private NotebookCategory category;
 	private Timestamp timestamp;
 
-	private Notebook() {
+	public Notebook() {
+		this(null);
 	}
 
-	private Notebook(String name) {
+	public Notebook(String name) {
 		this.name = (name != null && !name.isEmpty()) ? name : DEFAULT_NAME;
 	}
 
@@ -48,13 +49,5 @@ public class Notebook {
 
 	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
-	}
-
-	public static Notebook newInstance() {
-		return new Notebook();
-	}
-
-	public static Notebook newInstance(String name) {
-		return new Notebook(name);
 	}
 }

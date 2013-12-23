@@ -106,7 +106,7 @@
             </datasources>-->
 			<datasources>
                 <datasource jndi-name="java:jboss/datasources/ynoteMysqlDS" pool-name="ynoteMysqlDS" enabled="true" use-java-context="true">
-                    <connection-url>jdbc:mysql://192.168.1.106:3306/ynote</connection-url>
+                    <connection-url>jdbc:mysql://127.0.0.1:3306/ynote</connection-url>
                     <driver>com.mysql</driver>
                     <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
                     <security>
