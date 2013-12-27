@@ -39,26 +39,25 @@ public class QueryOperator implements Initable {
 	}
 
 	public Map<String, List<Document>> search(String statement,
-			List<String> fields) {
+			String defaultField) {
 		Map<String, List<Document>> map = new HashMap<String, List<Document>>();
 
 		try {
 
-			for (String f : fields) {
-				QueryParser parser = new QueryParser(Version.LUCENE_42, f,
-						new StandardAnalyzer(Version.LUCENE_42));
-				Query query = parser.parse(statement);
-				logger.debug(query.toString());
+			QueryParser parser = new QueryParser(Version.LUCENE_42, defaultField,
+					new StandardAnalyzer(Version.LUCENE_42));
+			Query query = parser.parse(statement);
+			logger.info(query.toString());
 
-				TopDocs topDocs = is.search(query, 10);
+			TopDocs topDocs = is.search(query, 10);
 
-				List<Document> hits = new ArrayList<>();
-				for (ScoreDoc sc : topDocs.scoreDocs) {
-					hits.add(is.doc(sc.doc));
-				}
-
-				map.put(f, hits);
+			List<Document> hits = new ArrayList<>();
+			for (ScoreDoc sc : topDocs.scoreDocs) {
+				hits.add(is.doc(sc.doc));
 			}
+
+			if (hits.size() > 0)
+				map.put(defaultField, hits);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

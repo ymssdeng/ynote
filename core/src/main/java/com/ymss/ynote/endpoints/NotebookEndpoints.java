@@ -1,5 +1,7 @@
 package com.ymss.ynote.endpoints;
 
+import java.util.Arrays;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +14,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.google.common.base.Joiner;
 import com.ymss.ynote.note.Notebook;
-import com.ymss.ynote.note.NotebookCategory;
+import com.ymss.ynote.search.query.QueryOperator;
 import com.ymss.ynote.storage.NotebookStorage;
 
 @Named
@@ -22,36 +25,38 @@ public class NotebookEndpoints {
 
 	@Inject
 	private NotebookStorage nbs;
-	
+	@Inject
+	private QueryOperator qo;
+
 	@POST
-	public Response createOne(
-			@Context HttpServletRequest hsr,
+	public Response createOne(@Context HttpServletRequest hsr,
 			@Context UriInfo uriinfo,
 			@HeaderParam("Authorization") String pAuthentication,
-			@QueryParam("name") String name
-			) throws Exception
-	{
+			@QueryParam("name") String name) throws Exception {
 		Notebook nbook = new Notebook(name);
 		nbs.save(nbook);
 		return Response.ok().build();
 	}
-	
+
 	@GET
-	public Response getNotebooks(
-			@Context HttpServletRequest hsr,
+	public Response getNotebook(@Context HttpServletRequest hsr,
 			@Context UriInfo uriinfo,
 			@HeaderParam("Authorization") String pAuthentication,
-			@QueryParam("name") String name
-			) throws Exception
-	{
-		Notebook nbook = new Notebook();
-		NotebookCategory category = new NotebookCategory();
-		category.setId(1);
-		nbook.setCategory(category);
-		
-		nbs.save(nbook);
-		
-		Notebook notebook = nbs.getById(nbook.getId());
+			@QueryParam("id") int id) throws Exception {
+		Notebook nb = nbs.getById(id);
+		return Response.ok(
+				Joiner.on(' ').join(id, nb.getCategory().getName(),
+						nb.getName())).build();
+	}
+
+	@GET
+	@Path("query/")
+	public Response queryNotebook(@Context HttpServletRequest hsr,
+			@Context UriInfo uriinfo,
+			@HeaderParam("Authorization") String pAuthentication,
+			@QueryParam("query") String queryStr) throws Exception {
+
+		qo.search(queryStr, "name");
 		return Response.ok().build();
 	}
 }
