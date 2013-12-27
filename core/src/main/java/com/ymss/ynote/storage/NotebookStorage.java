@@ -36,15 +36,13 @@ public class NotebookStorage implements Storage<Notebook> {
 	@Override
 	public List<Notebook> getPage(Paging paging) throws FileNotFoundException,
 			IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return nbsp.getPage(paging.getPage(), paging.getPageSize(), paging.isAscending());
 	}
 
 	@Override
 	public boolean hasNextPage(Paging paging) throws FileNotFoundException,
 			IOException {
-		// TODO Auto-generated method stub
-		return false;
+		return nbsp.hasNextPage(paging.getPage(), paging.getPageSize()) > 0;
 	}
 
 }

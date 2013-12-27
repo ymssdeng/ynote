@@ -3,7 +3,7 @@ package com.ymss.ynote.storage;
 public class Paging {
 	public static final int DEFAULT_PAGE_SIZE = 10;
 	private int pageSize = DEFAULT_PAGE_SIZE;
-	private int page;
+	private int page = 1;
 	private boolean isAscending;
 
 	public int getPageSize() {
