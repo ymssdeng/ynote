@@ -3,31 +3,39 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ymss.ynote.storage.provider.NotebookStorageProvider">
 
-	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+	<!-- <insert id="save" useGeneratedKeys="true" keyProperty="id">
 		insert into notebook (name, category_id) values(#{name}, #{category.id})
-	</insert>
+	</insert> -->
 
 	<select id="getById" resultMap="notebookMap">
-		select n.id as n_id, n.name as n_name,   from notebook as n
+		select n.id as n_id, n.name as n_name, n.category_id as n_category_id, 
+		n.created_date as n_created_date, c.name as c_name
+		from notebook as n
 		inner join category as c
 		on n.category_id = c.id
 		where n.id = #{0}
 	</select>
 
 	<select id="getPage" resultMap="notebookMap">
-		select * from notebook
-		inner join category
-		on notebook.category_id = category.id
-		order by notebook.id
+		select n.id as n_id, n.name as n_name, n.category_id as n_category_id, 
+		n.created_date as n_created_date, c.name as c_name
+		from notebook as n
+		inner join category as c
+		on n.category_id = c.id
+		where n.id > (#{0}-1)*#{1}
+		order by n.id
 		<if test="#{2}">asc</if>
 		<if test="!#{2}">desc</if>
 		limit #{1}
 	</select>
 
 	<resultMap id="notebookMap" type="Notebook">
-		<id property="id" column="id" />
-		<result property="timestamp" column="created_date" />
+		<id property="id" column="n_id" />
+		<result property="name" column="n_name" />
+		<result property="timestamp" column="n_created_date" />
 		<association property="category" javaType="NotebookCategory">
+			<result property="id" column="n_category_id" />
+			<result property="name" column="c_name" />
 		</association>
 	</resultMap>
 </mapper>
