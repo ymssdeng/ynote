@@ -2,7 +2,7 @@ package com.ymss.ynote.note;
 
 import java.sql.Timestamp;
 
-public class Notebook {
+public class Notebook implements Storagable{
 
 	private static final String DEFAULT_NAME = "New Notebook";
 

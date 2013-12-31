@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public interface Storage<T> {
+import com.ymss.ynote.note.Storagable;
+
+public interface Storage<T extends Storagable> {
 
 	void save(T t) throws Exception;
 

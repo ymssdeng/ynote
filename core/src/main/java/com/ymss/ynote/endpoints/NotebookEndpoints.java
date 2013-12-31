@@ -1,6 +1,6 @@
 package com.ymss.ynote.endpoints;
 
-import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import com.google.common.base.Joiner;
 import com.ymss.ynote.note.Notebook;
 import com.ymss.ynote.search.query.QueryOperator;
+import com.ymss.ynote.search.query.QueryResultProcessor;
 import com.ymss.ynote.storage.NotebookStorage;
 
 @Named
@@ -27,6 +28,8 @@ public class NotebookEndpoints {
 	private NotebookStorage nbs;
 	@Inject
 	private QueryOperator qo;
+	@Inject
+	private QueryResultProcessor qrp;
 
 	@POST
 	public Response createOne(@Context HttpServletRequest hsr,
@@ -56,7 +59,12 @@ public class NotebookEndpoints {
 			@HeaderParam("Authorization") String pAuthentication,
 			@QueryParam("query") String queryStr) throws Exception {
 
-		qo.search(queryStr, "name");
-		return Response.ok().build();
+		List<Notebook> lst = qrp.process(qo.search(queryStr, "name"), Notebook.class);
+		StringBuilder sb = new StringBuilder();
+		for (Notebook nb : lst) {
+			sb.append(Joiner.on(' ').join(nb.getId(), nb.getCategory().getName(),
+					nb.getName())).append("\n");
+		}
+		return Response.ok(sb.toString()).build();
 	}
 }

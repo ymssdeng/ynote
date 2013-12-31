@@ -1,6 +1,6 @@
 package com.ymss.ynote.note;
 
-public class NotebookCategory {
+public class NotebookCategory implements Storagable{
 	private Integer id;
 	private String name;
 
