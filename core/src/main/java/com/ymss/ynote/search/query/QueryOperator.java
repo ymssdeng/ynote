@@ -1,15 +1,12 @@
 package com.ymss.ynote.search.query;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -22,7 +19,7 @@ import org.springframework.context.annotation.DependsOn;
 import com.ymss.ynote.search.Initable;
 import com.ymss.ynote.search.index.IndexOperator;
 
-@Named
+@Named("query")
 @DependsOn("index")
 public class QueryOperator implements Initable {
 
@@ -36,8 +33,7 @@ public class QueryOperator implements Initable {
 		is = new IndexSearcher(io.getIr());
 	}
 
-	public List<Document> search(String statement, String defaultField) {
-		List<Document> hits = new ArrayList<Document>();
+	public ScoreDoc[] search(String statement, String defaultField) {
 
 		try {
 
@@ -48,9 +44,7 @@ public class QueryOperator implements Initable {
 
 			TopDocs topDocs = is.search(query, 10);
 
-			for (ScoreDoc sc : topDocs.scoreDocs) {
-				hits.add(is.doc(sc.doc));
-			}
+			return topDocs.scoreDocs;
 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -60,6 +54,6 @@ public class QueryOperator implements Initable {
 			e.printStackTrace();
 		}
 
-		return hits;
+		return null;
 	}
 }
