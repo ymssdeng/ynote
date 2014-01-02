@@ -3,6 +3,7 @@ package com.ymss.ynote.search.index;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -22,12 +23,11 @@ import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
 import com.ymss.ynote.note.Notebook;
-import com.ymss.ynote.search.Initable;
 import com.ymss.ynote.storage.Paging;
 import com.ymss.ynote.storage.Storage;
 
 @Named("index")
-public class IndexOperator implements Initable {
+public class IndexOperator {
 
 	private final Logger logger = Logger.getLogger(IndexOperator.class);
 	// used by query
@@ -39,8 +39,8 @@ public class IndexOperator implements Initable {
 	@Inject
 	private Storage<Notebook> nbStorage;
 
-	@Override
-	public void init() {
+	@PostConstruct
+	private void init() {
 
 		try {
 			// create dir

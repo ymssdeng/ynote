@@ -2,6 +2,7 @@ package com.ymss.ynote.search.query;
 
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -16,20 +17,19 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 import org.springframework.context.annotation.DependsOn;
 
-import com.ymss.ynote.search.Initable;
 import com.ymss.ynote.search.index.IndexOperator;
 
 @Named("query")
 @DependsOn("index")
-public class QueryOperator implements Initable {
+public class QueryOperator {
 
 	private final Logger logger = Logger.getLogger(QueryOperator.class);
 	@Inject
 	private IndexOperator io;
 	private IndexSearcher is;
 
-	@Override
-	public void init() {
+	@PostConstruct
+	private void init() {
 		is = new IndexSearcher(io.getIr());
 	}
 

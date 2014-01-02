@@ -15,7 +15,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.ymss.ynote.search.index.IndexOperator;
 
 public abstract class Querier {
@@ -53,7 +53,7 @@ public abstract class Querier {
 
 		});
 
-		Collections2.transform(sds, new Function<ScoreDoc, Document>() {
+		docs = Lists.transform(sds, new Function<ScoreDoc, Document>() {
 
 			@Override
 			public Document apply(ScoreDoc input) {
