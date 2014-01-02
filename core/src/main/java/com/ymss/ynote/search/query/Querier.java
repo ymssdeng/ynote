@@ -11,6 +11,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 
@@ -29,10 +31,40 @@ public abstract class Querier {
 	private IndexOperator io;
 	private IndexSearcher is;
 
+	public Querier(){
+		
+	}
+	
+	protected QueryBuilder qb;
+	protected QueryResultBuilder qrb;
+	protected abstract void initBuilder(QueryBuilder qb, QueryResultBuilder qrb);
+	
 	@PostConstruct
 	private void init() {
 		is = new IndexSearcher(io.getIr());
 	}
+
+	public QueryResultBuilder search2(String s) {
+		BooleanQuery bQuery  = new BooleanQuery();
+		for (String f : getFileds()) {
+			bQuery.add(qb.fQuery(f), BooleanClause.Occur.SHOULD);
+		}
+		
+		if (hasAdlQuery())
+			bQuery.add(qb.adlQuery(), BooleanClause.Occur.MUST);
+		
+		try {
+			is.search(bQuery, 10);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// transform
+		return qrb;
+	}
+	
+	protected abstract boolean hasAdlQuery();
 
 	public void search(String statement) {
 		List<ScoreDoc> sds = new ArrayList<>();
@@ -70,6 +102,4 @@ public abstract class Querier {
 	}
 
 	protected abstract List<String> getFileds();
-
-	public abstract Object result();
 }

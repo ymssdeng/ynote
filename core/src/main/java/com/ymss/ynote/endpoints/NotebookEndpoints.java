@@ -56,8 +56,8 @@ public class NotebookEndpoints {
 			@HeaderParam("Authorization") String pAuthentication,
 			@QueryParam("query") String queryStr) throws Exception {
 
-		nq.search(queryStr);
-		List<Notebook> lst = nq.result();
+		
+		List<Notebook> lst = nq.search2(queryStr).result();
 
 		StringBuilder sb = new StringBuilder();
 		for (Notebook nb : lst) {
