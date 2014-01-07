@@ -57,7 +57,7 @@ public class NotebookEndpoints {
 			@QueryParam("query") String queryStr) throws Exception {
 
 		
-		List<Notebook> lst = nq.search2(queryStr).result();
+		List<Notebook> lst = nq.search(queryStr).result();
 
 		StringBuilder sb = new StringBuilder();
 		for (Notebook nb : lst) {

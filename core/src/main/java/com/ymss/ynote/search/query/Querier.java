@@ -15,6 +15,7 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -37,54 +38,32 @@ public abstract class Querier {
 	
 	protected QueryBuilder qb;
 	protected QueryResultBuilder qrb;
-	protected abstract void initBuilder(QueryBuilder qb, QueryResultBuilder qrb);
+	protected abstract void initBuilder();
 	
 	@PostConstruct
 	private void init() {
 		is = new IndexSearcher(io.getIr());
 	}
 
-	public QueryResultBuilder search2(String s) {
+	public QueryResultBuilder search(String s) {
 		BooleanQuery bQuery  = new BooleanQuery();
 		for (String f : getFileds()) {
-			bQuery.add(qb.fQuery(f), BooleanClause.Occur.SHOULD);
+			bQuery.add(qb.fQuery(f, s), BooleanClause.Occur.SHOULD);
 		}
 		
 		if (hasAdlQuery())
 			bQuery.add(qb.adlQuery(), BooleanClause.Occur.MUST);
 		
+		TopDocs tds = null;
 		try {
-			is.search(bQuery, 10);
+			tds = is.search(bQuery, 10);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		// transform
-		return qrb;
-	}
-	
-	protected abstract boolean hasAdlQuery();
-
-	public void search(String statement) {
-		List<ScoreDoc> sds = new ArrayList<>();
-
-		for (String f : getFileds()) {
-			ScoreDoc[] sd = qo.search(statement, f);
-			sds.addAll(Arrays.asList(sd));
-		}
-
-		Collections.sort(sds, new Comparator<ScoreDoc>() {
-
-			@Override
-			public int compare(ScoreDoc o1, ScoreDoc o2) {
-				if (o1.score == o2.score)
-					return 0;
-				return o1.score > o2.score ? 1 : -1;
-			}
-
-		});
-
+		List<ScoreDoc> sds = Arrays.asList(tds.scoreDocs);
 		docs = Lists.transform(sds, new Function<ScoreDoc, Document>() {
 
 			@Override
@@ -99,7 +78,12 @@ public abstract class Querier {
 			}
 
 		});
+		
+		qrb.setHits(docs);
+		return qrb;
 	}
+	
+	protected abstract boolean hasAdlQuery();
 
 	protected abstract List<String> getFileds();
 }
