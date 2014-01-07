@@ -24,8 +24,6 @@ import com.ymss.ynote.search.index.IndexOperator;
 public abstract class Querier {
 
 	@Inject
-	protected QueryOperator qo;
-	@Inject
 	protected QueryResultProcessor qrp;
 	protected List<Document> docs;
 	@Inject
