@@ -9,8 +9,20 @@
 	
 	<select id="getById" resultMap="attachmentMap">
 		select * from attachment
-		where id = #{id}
+		where id = #{0}
 	</select>
+	
+	<select id="getAttachmentsInNotebook" resultMap="attachmentMap">
+		select * from attachment
+		where notebook_id = #{0}
+	</select>
+	
+	<insert id="saveAttachmentsInNotebook" useGeneratedKeys="true" keyProperty="id">
+		insert into attachment (name, notebook_id)
+		<foreach collection="attachments" item="item" index="index" separator="union all">
+			select #{item.name}, #{item.notebook.id}
+		</foreach>
+	</insert>
 
 	<resultMap id="attachmentMap" type="Attachment">
 		<id property="id" column="id" />
