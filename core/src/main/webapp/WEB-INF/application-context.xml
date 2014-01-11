@@ -35,4 +35,9 @@
 		<property name="mapperInterface" value="com.ymss.ynote.storage.provider.NotebookCategoryProvider" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
+	
+	<bean id="attachmentMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.ymss.ynote.storage.provider.AttachmentStorageProvider" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
 </beans>

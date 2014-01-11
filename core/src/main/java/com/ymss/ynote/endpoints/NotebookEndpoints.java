@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.google.common.base.Joiner;
+import com.ymss.ynote.note.Attachment;
 import com.ymss.ynote.note.Notebook;
 import com.ymss.ynote.search.query.NotebookQuerier;
 import com.ymss.ynote.storage.NotebookStorage;
@@ -34,6 +35,9 @@ public class NotebookEndpoints {
 			@HeaderParam("Authorization") String pAuthentication,
 			@QueryParam("name") String name) throws Exception {
 		Notebook nbook = new Notebook(name);
+		Attachment attachment = new Attachment();
+		attachment.setName("A1");
+		nbook.addAttachment(attachment);
 		nbs.save(nbook);
 		return Response.ok().build();
 	}

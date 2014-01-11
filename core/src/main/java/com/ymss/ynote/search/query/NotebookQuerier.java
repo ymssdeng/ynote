@@ -21,7 +21,7 @@ import com.ymss.ynote.note.Storagable;
 import com.ymss.ynote.storage.NotebookStorage;
 
 @Named
-@DependsOn("query")
+@DependsOn("index")
 public class NotebookQuerier extends Querier {
 
 	@Named("nbqb")

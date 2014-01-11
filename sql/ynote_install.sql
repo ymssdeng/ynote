@@ -9,7 +9,8 @@ create table if not exists notebook -- No dbo.tablename in MySQL
 	id int not null auto_increment,
 	name nvarchar(100) not null,
 	category_id int not null,
-	created_date timestamp,
+	created_date timestamp null,
+	updated_date timestamp null,
 	primary key (id)
 )engine=innodb auto_increment=1; -- MyISAM does not support foreign key
 
@@ -20,8 +21,20 @@ create table if not exists category
 	primary key (id)
 )engine=innodb auto_increment=1;
 
+create table if not exists attachment
+(
+	id int not null auto_increment,
+	notebook_id int not null,
+	name nvarchar(100) not null,
+	created_date timestamp null,
+	updated_date timestamp null,
+	primary key (id)
+)engine=innodb auto_increment=1;
+
+
 # -----------------create constraint ----------------------
-alter table notebook add constraint foreign key ynote(category_id) references category(id); 
+alter table notebook add foreign key (category_id) references category(id); 
+alter table attachment add foreign key (notebook_id) references notebook(id); 
 
 # -----------------create index ----------------------
 alter table notebook add index inx_notebook_name(name);

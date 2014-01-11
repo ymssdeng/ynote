@@ -7,7 +7,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.ymss.ynote.note.Attachment;
 import com.ymss.ynote.note.Notebook;
+import com.ymss.ynote.storage.provider.AttachmentStorageProvider;
 import com.ymss.ynote.storage.provider.NotebookStorageProvider;
 
 @Named
@@ -16,10 +18,20 @@ public class NotebookStorage implements Storage<Notebook> {
 	@Inject
 	@Named("notebookMapper")
 	private NotebookStorageProvider nbsp;
+	@Inject
+	@Named("attachmentMapper")
+	private AttachmentStorageProvider asp;
 
 	@Override
 	public void save(Notebook notebook) throws Exception {
+		// TODO: transaction
 		nbsp.save(notebook);
+		
+		for (Attachment attachment : notebook.getAttachments()) {
+			// set notebook
+			attachment.setNotebook(notebook);
+			asp.save(attachment);
+		}
 	}
 
 	@Override

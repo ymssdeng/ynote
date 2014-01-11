@@ -1,6 +1,8 @@
 package com.ymss.ynote.note;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Notebook implements Storagable{
 
@@ -9,7 +11,9 @@ public class Notebook implements Storagable{
 	private Integer id;
 	private String name = DEFAULT_NAME;
 	private NotebookCategory category;
-	private Timestamp timestamp;
+	private Timestamp createdStamp;
+	private Timestamp updatedStamp;
+	private Set<Attachment> attachments = new HashSet<>();
 
 	public Notebook() {
 		this(null);
@@ -17,6 +21,8 @@ public class Notebook implements Storagable{
 
 	public Notebook(String name) {
 		this.name = (name != null && !name.isEmpty()) ? name : DEFAULT_NAME;
+		this.category = new NotebookCategory();
+		this.category.setId(1);
 	}
 
 	public Integer getId() {
@@ -43,11 +49,27 @@ public class Notebook implements Storagable{
 		this.category = category;
 	}
 
-	public Timestamp getTimestamp() {
-		return timestamp;
+	public Timestamp getCreatedStamp() {
+		return createdStamp;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
+	public void setCreatedStamp(Timestamp timestamp) {
+		this.createdStamp = timestamp;
+	}
+	
+	public Timestamp getUpdatedStamp() {
+		return updatedStamp;
+	}
+
+	public void setUpdatedStamp(Timestamp timestamp) {
+		this.updatedStamp = timestamp;
+	}
+
+	public Set<Attachment> getAttachments() {
+		return attachments;
+	}
+	
+	public void addAttachment(Attachment attachment) {
+		attachments.add(attachment);
 	}
 }

@@ -38,7 +38,7 @@ public class IndexOperator {
 	private List<Document> docs = new ArrayList<>();
 	@Inject
 	private Storage<Notebook> nbStorage;
-
+	
 	@PostConstruct
 	private void init() {
 
@@ -77,7 +77,7 @@ public class IndexOperator {
 			// clear
 			docs.clear();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 
 	}
