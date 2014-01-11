@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -33,10 +34,26 @@ public class NotebookEndpoints {
 	public Response createOne(@Context HttpServletRequest hsr,
 			@Context UriInfo uriinfo,
 			@HeaderParam("Authorization") String pAuthentication,
-			@QueryParam("name") String name) throws Exception {
+			@QueryParam("name") String name,
+			@QueryParam("attname") String attname) throws Exception {
 		Notebook nbook = new Notebook(name);
 		Attachment attachment = new Attachment();
-		attachment.setName("A1");
+		attachment.setName(attname);
+		nbook.addAttachment(attachment);
+		nbs.save(nbook);
+		return Response.ok().build();
+	}
+	
+	@POST
+	@Path("/{id}/attachment")
+	public Response addAttachment(@Context HttpServletRequest hsr,
+			@Context UriInfo uriinfo,
+			@HeaderParam("Authorization") String pAuthentication,
+			@PathParam("id") int id,
+			@QueryParam("name") String attname) throws Exception {
+		Notebook nbook = nbs.getById(id);
+		Attachment attachment = new Attachment();
+		attachment.setName(attname);
 		nbook.addAttachment(attachment);
 		nbs.save(nbook);
 		return Response.ok().build();
