@@ -26,6 +26,7 @@ create table if not exists attachment
 	id int not null auto_increment,
 	notebook_id int not null,
 	name nvarchar(100) not null,
+	extension nvarchar(10) not null,
 	created_date timestamp null,
 	updated_date timestamp null,
 	primary key (id)

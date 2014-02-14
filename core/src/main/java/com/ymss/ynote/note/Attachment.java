@@ -7,6 +7,7 @@ public class Attachment implements Storagable {
 	private Integer id;
 	private Notebook notebook;
 	private String name;
+	private String extension;
 	private Timestamp createdStamp;
 	private Timestamp updatedStamp;
 
@@ -48,6 +49,14 @@ public class Attachment implements Storagable {
 
 	public void setUpdatedStamp(Timestamp updatedStamp) {
 		this.updatedStamp = updatedStamp;
+	}
+
+	public String getExtension() {
+		return extension;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
 	}
 
 }

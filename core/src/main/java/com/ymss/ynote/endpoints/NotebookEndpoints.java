@@ -50,7 +50,8 @@ public class NotebookEndpoints {
 			@Context UriInfo uriinfo,
 			@HeaderParam("Authorization") String pAuthentication,
 			@PathParam("id") int id,
-			@QueryParam("name") String attname) throws Exception {
+			@QueryParam("name") String attname,
+			@QueryParam("extension") String attext) throws Exception {
 		Notebook nbook = nbs.getById(id);
 		Attachment attachment = new Attachment();
 		attachment.setName(attname);
