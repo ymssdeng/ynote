@@ -1,7 +1,14 @@
 package com.ymss.ynote.storage;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,6 +38,19 @@ public class NotebookStorage implements Storage<Notebook> {
 			// set notebook
 			attachment.setNotebook(notebook);
 			asp.save(attachment);
+		}
+		
+		// save attachment file
+		ByteBuffer buffer = ByteBuffer.allocate(1024);
+		for (Attachment attachment : notebook.getAttachments()) {
+			try(BufferedReader reader = attachment.getReader()) {
+				Paths path = Files.createFile(Paths.get(""));
+				int read = 0;
+				while((read = reader.read(buffer.asCharBuffer())) > 0){
+					Files.write(path, buffer.array(), StandardOpenOption.APPEND);
+				}
+			};
+			buffer.clear();
 		}
 	}
 

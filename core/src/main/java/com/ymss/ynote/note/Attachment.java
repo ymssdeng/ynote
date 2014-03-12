@@ -1,15 +1,18 @@
 package com.ymss.ynote.note;
 
+import java.io.InputStream;
 import java.sql.Timestamp;
 
 public class Attachment implements Storagable {
 
 	private Integer id;
+	private String guid;
 	private Notebook notebook;
 	private String name;
 	private String extension;
 	private Timestamp createdStamp;
 	private Timestamp updatedStamp;
+	private InputStream stream;
 
 	public Integer getId() {
 		return id;
@@ -58,5 +61,23 @@ public class Attachment implements Storagable {
 	public void setExtension(String extension) {
 		this.extension = extension;
 	}
+
+	public InputStream getStream() {
+		return stream;
+	}
+
+	public void setStream(InputStream stream) {
+		this.stream = stream;
+	}
+
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
+	}
+
+
 
 }

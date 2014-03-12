@@ -4,7 +4,8 @@
 <mapper namespace="com.ymss.ynote.storage.provider.AttachmentStorageProvider">
 
 	<insert id="save" useGeneratedKeys="true" keyProperty="id">
-		insert into attachment (name, notebook_id) values(#{name}, #{notebook.id});		
+		insert into attachment (name, guid, notebook_id, extension) 
+		values(#{name}, #{guid}, #{notebook.id}, #{extension});		
 	</insert>
 	
 	<select id="getById" resultMap="attachmentMap">
