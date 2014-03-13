@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.ymss.ynote.note.Attachment;
+import com.ymss.ynote.search.tika.TextExtractor;
 import com.ymss.ynote.storage.provider.AttachmentStorageProvider;
 
 @Named
@@ -23,20 +24,28 @@ public class AttachmentStorage implements Storage<Attachment>{
 	@Named("attachmentMapper")
 	private AttachmentStorageProvider asp;
 	
+	@Inject
+	@Named
+	private TextExtractor te;
+	
 	@Override
 	public void save(Attachment t) throws Exception {
 		asp.save(t);
 		
 		// save attachment file
 		ByteBuffer buffer = ByteBuffer.allocate(2048);
+		Path apath = Paths.get("/home/" + t.getGuid());
 		try(BufferedInputStream bis = new BufferedInputStream(t.getStream())){
-			Path path = Files.createFile(Paths.get("/home/" + t.getGuid()));
+			Path path = Files.createFile(apath);
 			
 			int read = 0;
 			while((read = bis.read(buffer.array())) > 0){
 				Files.write(path, buffer.array(), StandardOpenOption.APPEND);
 			}
 		};
+		
+		// put into extractor queue
+		te.put(apath, t.getExtension());
 	}
 
 	@Override
