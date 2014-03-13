@@ -1,5 +1,6 @@
 package com.ymss.ynote.storage;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
@@ -41,17 +43,19 @@ public class NotebookStorage implements Storage<Notebook> {
 		}
 		
 		// save attachment file
-		ByteBuffer buffer = ByteBuffer.allocate(1024);
-		for (Attachment attachment : notebook.getAttachments()) {
-			try(BufferedReader reader = attachment.getReader()) {
-				Paths path = Files.createFile(Paths.get(""));
-				int read = 0;
-				while((read = reader.read(buffer.asCharBuffer())) > 0){
-					Files.write(path, buffer.array(), StandardOpenOption.APPEND);
-				}
-			};
-			buffer.clear();
-		}
+		ByteBuffer buffer = ByteBuffer.allocate(2048);
+		Path apath = Paths.get("/home/" + t.getGuid());
+		try(BufferedInputStream bis = new BufferedInputStream(t.getStream())){
+			Path path = Files.createFile(apath);
+			
+			int read = 0;
+			while((read = bis.read(buffer.array())) > 0){
+				Files.write(path, buffer.array(), StandardOpenOption.APPEND);
+			}
+		};
+		
+		// put into extractor queue
+		te.put(apath, t.getExtension());
 	}
 
 	@Override
