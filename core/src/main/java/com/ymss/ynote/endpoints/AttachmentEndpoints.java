@@ -34,6 +34,7 @@ public class AttachmentEndpoints {
 		if (names.length != exts.length)
 			return Response.ok("request error").build();
 
+		// get stream
 		ServletFileUpload upload = new ServletFileUpload();
 		FileItemIterator iterator = upload.getItemIterator(hsr);
 		
