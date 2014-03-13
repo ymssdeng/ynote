@@ -1,13 +1,10 @@
 package com.ymss.ynote.storage;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -35,27 +32,29 @@ public class NotebookStorage implements Storage<Notebook> {
 	public void save(Notebook notebook) throws Exception {
 		// TODO: transaction
 		nbsp.save(notebook);
-		
+
 		for (Attachment attachment : notebook.getAttachments()) {
 			// set notebook
 			attachment.setNotebook(notebook);
 			asp.save(attachment);
 		}
-		
+
 		// save attachment file
 		ByteBuffer buffer = ByteBuffer.allocate(2048);
-		Path apath = Paths.get("/home/" + t.getGuid());
-		try(BufferedInputStream bis = new BufferedInputStream(t.getStream())){
-			Path path = Files.createFile(apath);
-			
-			int read = 0;
-			while((read = bis.read(buffer.array())) > 0){
-				Files.write(path, buffer.array(), StandardOpenOption.APPEND);
+		for (Attachment attachment : notebook.getAttachments()) {
+			Path apath = Paths.get("/home/" + attachment.getGuid());
+			try (BufferedInputStream bis = new BufferedInputStream(
+					attachment.getStream())) {
+				Path path = Files.createFile(apath);
+
+				int read = 0;
+				while ((read = bis.read(buffer.array())) > 0) {
+					Files.write(path, buffer.array(), StandardOpenOption.APPEND);
+				}
 			}
-		};
+		}
 		
-		// put into extractor queue
-		te.put(apath, t.getExtension());
+		// TODO: send this to index thread
 	}
 
 	@Override
@@ -72,7 +71,8 @@ public class NotebookStorage implements Storage<Notebook> {
 	@Override
 	public List<Notebook> getPage(Paging paging) throws FileNotFoundException,
 			IOException {
-		return nbsp.getPage(paging.getPage(), paging.getPageSize(), paging.isAscending());
+		return nbsp.getPage(paging.getPage(), paging.getPageSize(),
+				paging.isAscending());
 	}
 
 	@Override

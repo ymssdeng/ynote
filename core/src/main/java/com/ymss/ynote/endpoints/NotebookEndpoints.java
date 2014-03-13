@@ -37,30 +37,34 @@ public class NotebookEndpoints {
 			@Context UriInfo uriinfo,
 			@HeaderParam("Authorization") String pAuthentication,
 			@QueryParam("name") String name) throws Exception {
+
+		Notebook nbook = new Notebook(name);
+
+		// attachment
 		String[] names = hsr.getParameterValues("name");
 		String[] exts = hsr.getParameterValues("extension");
 
-		if (names.length != exts.length)
+		if (!((names == null && exts == null) || (names != null && exts != null && names.length == exts.length)))
 			return Response.ok("request error").build();
 
-		// get stream
-		ServletFileUpload upload = new ServletFileUpload();
-		FileItemIterator iterator = upload.getItemIterator(hsr);
-		
-		for (int i = 0; i < names.length; i++) {
-			Attachment attachment = new Attachment();
-			attachment.setName(names[i]);
-			attachment.setExtension(exts[i]);
-			attachment.setStream(iterator.next().openStream());
-			as.save(attachment);
+		if (names != null) {
+			// get stream
+			ServletFileUpload upload = new ServletFileUpload();
+			FileItemIterator iterator = upload.getItemIterator(hsr);
+
+			for (int i = 0; i < names.length; i++) {
+				Attachment attachment = new Attachment();
+				attachment.setName(names[i]);
+				attachment.setExtension(exts[i]);
+				attachment.setStream(iterator.next().openStream());
+				nbook.addAttachment(attachment);
+			}
+
 		}
-		
-		Notebook nbook = new Notebook(name);
+
 		nbs.save(nbook);
 		return Response.ok().build();
 	}
-	
-
 
 	@GET
 	public Response getNotebook(@Context HttpServletRequest hsr,
@@ -80,7 +84,6 @@ public class NotebookEndpoints {
 			@HeaderParam("Authorization") String pAuthentication,
 			@QueryParam("query") String queryStr) throws Exception {
 
-		
 		List<Notebook> lst = nq.search(queryStr).result();
 
 		StringBuilder sb = new StringBuilder();
